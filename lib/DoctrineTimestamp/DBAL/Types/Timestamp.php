@@ -49,15 +49,7 @@ class Timestamp extends Type
             return $value->getTimestamp();
         }
 
-        if (is_callable('ConversionException::conversionFailedInvalidType')) {
-            throw ConversionException::conversionFailedInvalidType(
-                $value,
-                $this->getName(),
-                ['null', 'DateTime']
-            );
-        }
-
-        throw ConversionException::conversionFailed($value, $this->getName());
+        throw $this->buildTypeException($value, ['null', 'DateTime']);
     }
 
     /**
@@ -70,16 +62,10 @@ class Timestamp extends Type
         }
 
         if (!is_int($value)) {
-            throw ConversionException::conversionFailedInvalidType(
-                $value,
-                $this->getName(),
-                ['integer']
-            );
+            throw $this->buildTypeException($value, ['integer']);
         }
-
-        $dt = new DateTimeImmutable();
         
-        return $dt->setTimestamp($value);
+        return (new DateTimeImmutable())->setTimestamp($value);
     }
 
     /**
@@ -96,5 +82,30 @@ class Timestamp extends Type
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;
+    }
+
+    /**
+     * ConversionException factory, using when needed & available the conversionFailedInvalidType
+     * static factory.
+     *
+     * @param mixed      $value
+     * @param array|null $allowedTypes Allowed types, if applyable.
+     *
+     * @return ConversionException
+     */
+    protected function buildTypeException($value, $allowedTypes = null)
+    {
+        if (
+            is_array($allowedTypes)
+            && is_callable('ConversionException::conversionFailedInvalidType')
+        ) {
+            return ConversionException::conversionFailedInvalidType(
+                $value,
+                $this->getName(),
+                $allowedTypes
+            );
+        }
+
+        return ConversionException::conversionFailed($value, $this->getName());
     }
 }

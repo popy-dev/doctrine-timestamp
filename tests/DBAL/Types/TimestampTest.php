@@ -112,6 +112,17 @@ class TimestampTest extends TestCase
     }
 
     /**
+     * @expectedException Doctrine\DBAL\Types\ConversionException
+     */
+    public function testConvertToPHPValueWithInvalidTypeThrowsException()
+    {
+        $this->type->convertToPHPValue(
+            '3600',
+            new MySqlPlatform()
+        );
+    }
+
+    /**
      * @dataProvider provideSamples
      */
     public function testConvertToPHPValue(DateTimeInterface $expected, $input)
