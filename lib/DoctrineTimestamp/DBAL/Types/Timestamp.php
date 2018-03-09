@@ -64,7 +64,7 @@ class Timestamp extends Type
             return null;
         }
 
-        if (!is_int($value)) {
+        if (!preg_match('/^[+-]?\d+$/', $value)) {
             throw ConversionException::conversionFailedInvalidType(
                 $value,
                 $this->getName(),
