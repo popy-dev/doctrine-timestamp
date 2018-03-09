@@ -49,11 +49,15 @@ class Timestamp extends Type
             return $value->getTimestamp();
         }
 
-        throw ConversionException::conversionFailedInvalidType(
-            $value,
-            $this->getName(),
-            ['null', 'DateTimeInterface']
-        );
+        if (is_callable('ConversionException::conversionFailedInvalidType')) {
+            throw ConversionException::conversionFailedInvalidType(
+                $value,
+                $this->getName(),
+                ['null', 'DateTime']
+            );
+        }
+
+        throw ConversionException::conversionFailed($value, $this->getName());
     }
 
     /**

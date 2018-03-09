@@ -12,11 +12,17 @@
     ],
     "require" : {
         "php": ">=5.5.0",
-        "doctrine/dbal": "2.*"
+        "doctrine/dbal": "^2.0"
     },
     "autoload": {
         "psr-0": {
             "DoctrineTimestamp": "lib"
         }
+    },
+    "autoload-dev": {
+        "psr-4": { "DoctrineTimestamp\\Tests\\": "tests/" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
     }
 }
