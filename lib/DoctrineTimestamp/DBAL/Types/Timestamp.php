@@ -65,6 +65,14 @@ class Timestamp extends Type
             return null;
         }
 
+        if (!is_int($value)) {
+            throw ConversionException::conversionFailedInvalidType(
+                $value,
+                $this->getName(),
+                ['integer']
+            );
+        }
+
         $dt = new DateTimeImmutable();
         
         return $dt->setTimestamp($value);
